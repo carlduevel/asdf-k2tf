@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for k2tf.
 GH_REPO="https://github.com/sl1pm4t/k2tf"
 TOOL_NAME="k2tf"
 TOOL_TEST="k2tf --version"
@@ -14,7 +13,6 @@ fail() {
 
 curl_opts=(-fsSL)
 
-# NOTE: You might want to remove this if k2tf is not hosted on GitHub releases.
 if [ -n "${GITHUB_API_TOKEN:-}" ]; then
   curl_opts=("${curl_opts[@]}" -H "Authorization: token $GITHUB_API_TOKEN")
 fi
@@ -27,12 +25,10 @@ sort_versions() {
 list_github_tags() {
   git ls-remote --tags --refs "$GH_REPO" |
     grep -o 'refs/tags/.*' | cut -d/ -f3- |
-    sed 's/^v//' # NOTE: You might want to adapt this sed to remove non-version strings from tags
+    sed 's/^v//'
 }
 
 list_all_versions() {
-  # TODO: Adapt this. By default we simply list the tag names from GitHub releases.
-  # Change this function if k2tf has other means of determining installable versions.
   list_github_tags
 }
 
@@ -42,9 +38,11 @@ download_release() {
   filename="$2"
 
   # TODO: Adapt the release URL convention for k2tf
-  url="$GH_REPO/archive/v${version}.tar.gz"
+  url="$GH_REPO/releases/download/v${version}/k2tf_${version}_Linux_x86_64.tar.gz"
+
 
   echo "* Downloading $TOOL_NAME release $version..."
+  echo "$filename"
   curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
 }
 
@@ -58,10 +56,10 @@ install_version() {
   fi
 
   (
-    mkdir -p "$install_path"
+    mkdir -p "$install_path/bin"
     cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
+    mv "${install_path}/k2tf" "${install_path}/bin/k2tf"
 
-    # TODO: Asert k2tf executable exists.
     local tool_cmd
     tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
     test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
