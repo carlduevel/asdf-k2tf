@@ -57,6 +57,7 @@ install_version() {
   (
     mkdir -p "$install_path/bin"
     cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
+    ls "${install_path}"
     mv "${install_path}/k2tf" "${install_path}/bin/k2tf"
 
     local tool_cmd
