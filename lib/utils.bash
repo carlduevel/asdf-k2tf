@@ -37,12 +37,9 @@ download_release() {
   version="$1"
   filename="$2"
 
-  # TODO: Adapt the release URL convention for k2tf
   url="$GH_REPO/releases/download/v${version}/k2tf_${version}_Linux_x86_64.tar.gz"
-
   echo "* Downloading $TOOL_NAME release $version..."
-  echo "$filename"
-  curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
+  curl   "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
 }
 
 install_version() {
