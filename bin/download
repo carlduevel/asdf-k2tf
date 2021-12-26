@@ -22,6 +22,4 @@ ls "${ASDF_DOWNLOAD_PATH}"
 tar -xzf "$release_file" -C "$ASDF_DOWNLOAD_PATH" || fail "Could not extract $release_file"
 # Remove the tar.gz file since we don't need to keep it
 
-echo "This is the download path contents in $ASDF_DOWNLOAD_PATH AFTER extraction"
-ls "${ASDF_DOWNLOAD_PATH}"
 rm "$release_file"
