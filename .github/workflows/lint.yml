@@ -8,4 +8,4 @@ on:
 
 jobs:
   call-workflow-passing-data:
-    uses: carlduevel/asdf-plugin-build-harness/.github/workflows/lint.yml@main
+    uses: carlduevel/asdf-plugin-build-harness/.github/workflows/lint.yml@master
