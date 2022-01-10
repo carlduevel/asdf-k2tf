@@ -7,5 +7,5 @@ on:
   pull_request:
 
 jobs:
-  call-workflow-passing-data:
+  shell:
     uses: carlduevel/asdf-plugin-build-harness/.github/workflows/lint.yml@master
