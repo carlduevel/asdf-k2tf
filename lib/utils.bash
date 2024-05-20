@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -euzo pipefail
 
 GH_REPO="https://github.com/sl1pm4t/k2tf"
 TOOL_NAME="k2tf"
@@ -33,13 +33,16 @@ list_all_versions() {
 }
 
 download_release() {
-  local version filename url
+  local version filename url url_post_070
   version="$1"
   filename="$2"
   url="$GH_REPO/releases/download/v${version}/k2tf_${version}_$(uname)_x86_64.tar.gz"
+  url_post_070=${url/"_x86_64"/"amd64"/}
   echo "* Downloading $TOOL_NAME release $version..."
-  curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
-}
+  curl "${curl_opts[@]}" -o "$filename" -C - "$url" || \
+  curl "${curl_opts[@]}" -o "$filename" -C - "$url_post_070" || \
+  fail "Could not download $url_post_070"
+  }
 
 install_version() {
   local install_type="$1"
