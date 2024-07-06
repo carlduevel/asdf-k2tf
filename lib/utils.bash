@@ -32,11 +32,38 @@ list_all_versions() {
   list_github_tags
 }
 
+amd64_or_arm64() {
+  if [ "$(uname -m)" = "x86_64" ]; then
+    echo "amd64"
+  else
+    uname -m
+  fi
+}
+
+arch() {
+  local version=$1
+  local major=$(echo "$version" | cut -d'.' -f1)
+  local minor=$(echo "$version" | cut -d'.' -f2)
+  if [ "$major" -gt 0 ]; then
+    amd64_or_arm64
+  elif [ "$major" -eq 0 ] && [ "$minor" -ge 8 ]; then
+    amd64_or_arm64
+  else
+    echo "x86_64"
+  fi
+}
+
+url() {
+  local version
+  version="$1"
+  echo "$GH_REPO/releases/download/v${version}/k2tf_${version}_$(uname)_$(arch $version).tar.gz"
+}
+
 download_release() {
   local version filename url
   version="$1"
   filename="$2"
-  url="$GH_REPO/releases/download/v${version}/k2tf_${version}_$(uname)_x86_64.tar.gz"
+  url="$(url "$version")"
   echo "* Downloading $TOOL_NAME release $version..."
   curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
 }
